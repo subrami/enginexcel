@@ -6,7 +6,7 @@
 * nobuild
 * sv (string view library)
 
-## Todo [2 weeks]
+## Todo [2 week scope]
 - [x] "Estimating" table size from content.
 - [ ] Create barebones nobuild headers only library.
 - [ ] Polish & document data structures for parsing.
