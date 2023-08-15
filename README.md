@@ -1,5 +1,5 @@
 # enginexcel
-excel engine!
+*excel engine all on your CLI!*
 
 
 Making use of
