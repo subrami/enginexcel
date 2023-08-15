@@ -2,7 +2,7 @@
 *excel engine all on your CLI!*
 
 
-## Making use of
+## Libs
 * nobuild
 * sv (string view library)
 
