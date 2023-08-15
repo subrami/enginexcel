@@ -7,6 +7,31 @@
 #define SV_IMPLEMENTATION
 #include "./libs/sv.h"
 
+typedef enum {
+    CELL_TEXT,
+    CELL_NUMBER,
+    CELL_FORMULA
+} Cell_Type;
+
+typedef union {
+    String_View text;
+    double number;
+} Cell_Union;
+
+typedef enum {
+    EXPR_NUMBER = 0,
+    EXPR_CELL,
+    EXPR_BINARY_OPR,
+
+} Formula_Type;
+
+// typedef formula {
+//     Formula_Type type;
+// } Formula;
+
+typedef struct {
+    Cell_Type type;
+} Cell;
 
 int errorCode = 0;
 
@@ -101,6 +126,37 @@ error:
     return NULL;
 }
 
+void calc_table_size(String_View content, size_t *out_rows, size_t *out_cols) {
+    // %.*s is a format specifier for a string view.
+
+    size_t cols = 0;
+    size_t rows = 0;
+    for (; content.count > 0; rows++) {
+        
+        String_View line = sv_chop_by_delim(&content, '\n');
+
+        size_t col = 0;
+        for (; line.count > 0; col++) {
+            String_View cell = sv_trim(sv_chop_by_delim(&line, ','));
+            // printf("%s: (%zu, %zu) - %.*s\n",
+            //  input_file_path,
+            //  row, col, SV_Arg(cell));
+        }
+
+        if (cols < col) {
+            cols = col;
+        } 
+
+    }
+    if (out_cols) {
+        *out_cols = cols;
+    }
+
+    if (out_rows) {
+        *out_rows = rows;
+    }
+}
+
 int main (int argc, char **argv) {
     printf("Running excel-engine..\n");
 
@@ -126,17 +182,17 @@ int main (int argc, char **argv) {
         .data = content,
     };
 
-    // %.*s is a format specifier for a string view.
-    for (size_t row = 0; csv.count > 0; row++) {
-        String_View line = sv_chop_by_delim(&csv, '\n');
-        const char *start = line.data;
-        for (size_t col = 0; line.count > 0; col++) {
-            String_View cell = sv_trim(sv_chop_by_delim(&line, ','));
-            printf("%s: (%zu, %zu) - %.*s\n",
-             input_file_path,
-             row, cell.data - start, SV_Arg(cell));
-        }
-    }
     fwrite(content, 1, content_size, stdout);
+
+    size_t rows, cols;
+    calc_table_size(csv, &rows, &cols);
+    printf("Table Size: %zux%zu\n", rows, cols);
+
+    Cell *table = malloc(sizeof(Cell) * rows * cols);
+
+    if (table == NULL) {
+        fprintf(stderr, "ERROR: memory allocation of table failed.");
+    }
+
     return 0;
 }
