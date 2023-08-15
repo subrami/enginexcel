@@ -7,8 +7,9 @@ Making use of
 * sv (string view library)
 
 Todo
-[*] Create barebones nobuild headers only library.
-[*] Polish & document data structures for parsing.
-[*] Parse table from content.
+- [*] "Estimating" table size from content.
+- [] Create barebones nobuild headers only library.
+- [] Polish & document data structures for parsing.
+- [] Parse table from content.
 
 Heavily inspired by a Tsoding livestream.
